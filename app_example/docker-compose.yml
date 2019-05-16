@@ -1,0 +1,17 @@
+version: '2'
+services:
+  app:
+    image: dsrglobal/example:latest
+    container_name: example_app_1
+    volumes:
+      - .:/var/sites/example
+    external_links:
+      - compose_php-fpm71_1:php
+    networks:
+      - infra_net
+      - app_net
+networks:
+  app_net:
+    external: true
+  infra_net:
+    external: true

@@ -1,0 +1,38 @@
+version: '3'
+services:
+  http-proxy:
+    image: wickedviking/http-proxy:latest
+    container_name: http-proxy
+    ports:
+      - "80:80" # http
+      - "443:443" # https
+    networks:
+      - app_net
+  mysql-51:
+    image: mysql:5.5
+    container_name: mysql_app
+    environment:
+      MYSQL_ROOT_PASSWORD: "dev-pass"
+      MYSQL_USER: "dev"
+      MYSQL_PASSWORD: "dev-test"
+    volumes:
+      - ~/data/mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - infra_net
+      - app_net
+  php-fpm56:
+    image: wickedviking/php56
+    container_name: php-fpm56
+    volumes:
+      - ~/code/wickedviking:/var/sites/
+    networks:
+      - infra_net
+    external_links:
+      - mysql_app_1:mysql
+networks:
+  app_net:
+    external: true
+  infra_net:
+    external: true
